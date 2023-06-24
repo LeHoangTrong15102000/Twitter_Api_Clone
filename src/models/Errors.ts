@@ -31,6 +31,7 @@ export class ErrorWithStatus {
 export class EntityError extends ErrorWithStatus {
   errors: ErrorsType
   // status ko cần truyền vào constructor vì chúng ta sẽ để mặc định nó là 422
+  // Mặc định khi bị lỗi chung thì sẽ trả về lỗi là `Validation Error`
   constructor({ message = USERS_MESSAGES.VALIDATION_ERROR, errors }: { message?: string; errors: ErrorsType }) {
     super({ message, status: HTTP_STATUS.UNPROCESSABLE_ENTITY }) // kế thừa nó từ thằng ErrorWStatus
     this.errors = errors

@@ -123,19 +123,29 @@ export const LoginValidator = (req: Request, res: Response, next: NextFunction) 
 export const RegisterValidator = validate(
   checkSchema({
     name: {
-      notEmpty: true,
-      isString: true,
+      notEmpty: {
+        errorMessage: USERS_MESSAGES.NAME_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: USERS_MESSAGES.NAME_MUST_BE_A_STRING
+      },
       isLength: {
         options: {
           min: 1,
-          max: 20
-        }
+          max: 100
+        },
+
+        errorMessage: USERS_MESSAGES.NAME_LENGTH_MUST_BE_FROM_1_TO_100
       },
       trim: true
     },
     email: {
-      notEmpty: true,
-      isEmail: true,
+      notEmpty: {
+        errorMessage: USERS_MESSAGES.EMAIL_IS_REQUIRED
+      },
+      isEmail: {
+        errorMessage: USERS_MESSAGES.EMAIL_IS_INVALID
+      },
       isLength: {
         options: {}
       },
@@ -144,20 +154,25 @@ export const RegisterValidator = validate(
         options: async (value) => {
           const isExistEmail = await usersService.checkEmailExist(value)
           if (isExistEmail) {
-            throw new Error('Email already exist') // tương đương throw ('Email already exist'), nó sẽ tạo ra object lỗi có dạng {message: 'Lỗi'}
+            throw new Error(USERS_MESSAGES.EMAIL_ALREADY_EXISTS) // tương đương throw ('Email already exist'), nó sẽ tạo ra object lỗi có dạng {message: 'Lỗi'}
           }
           return true // pass validate email
         }
       }
     },
     password: {
-      notEmpty: true,
-      isString: true,
+      notEmpty: {
+        errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_A_STRING
+      },
       isLength: {
         options: {
           min: 6,
-          max: 20
-        }
+          max: 50
+        },
+        errorMessage: USERS_MESSAGES.PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
       },
       isStrongPassword: {
         options: {
@@ -167,18 +182,22 @@ export const RegisterValidator = validate(
           minNumbers: 1,
           minSymbols: 1
         },
-        errorMessage:
-          'Password must be at least 6 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol'
+        errorMessage: USERS_MESSAGES.PASSWORD_MUST_BE_STRONG
       }
     },
     confirm_password: {
-      notEmpty: true,
-      isString: true,
+      notEmpty: {
+        errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_A_STRING
+      },
       isLength: {
         options: {
           min: 6,
-          max: 20
-        }
+          max: 50
+        },
+        errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_6_TO_50
       },
       isStrongPassword: {
         options: {
@@ -188,24 +207,25 @@ export const RegisterValidator = validate(
           minNumbers: 1,
           minSymbols: 1
         },
-        errorMessage:
-          'Password must be at least 6 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol'
+        errorMessage: USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_STRONG
       },
       custom: {
         options: (value, { req }) => {
           if (value !== req.body.password) {
-            throw new Error('Password comfirmation does not match password!')
+            throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
           }
           return true // ngược lại thì return true
         }
       }
     },
+    //
     date_of_birth: {
       isISO8601: {
         options: {
           strict: true,
           strictSeparator: true
-        }
+        },
+        errorMessage: USERS_MESSAGES.DATE_OF_BIRTH_MUST_BE_ISO8601
       }
     }
   })
