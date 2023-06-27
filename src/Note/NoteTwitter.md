@@ -368,14 +368,28 @@
 
 - Xử lý logic login
 
+- Login cũng phải hashPassword để lấy password đã hash so sánh password đã hash có sẵn trong database
+
+- Chúng ta có thể không cần thuộc tính `notEmpty` trong phần `email` của `loginValidator` -> Khi mà mình không truyền `NotEmpty` thì `Email Invalid` nó vẫn sẽ báo lỗi, chúng ta thích để lại cũng được, để lại thì nó sẽ chặt chẽ về validate hơn(chúng ta có thể bỏ nếu nó thông báo quá nhiều message lỗi)
+
+- Khi mà người dùng đăng nhập thì chúng ta kiểm tra email của ngdung trong database xem email có tồn tại hay không, nếu không thì chúng ta throw một cái message là
+
+- Ở phần login này chúng ta có thể tách phần `email` và `password` tự khai báo hàm custom ở các field của từng thằng, nhưng ở đây chúng ta xử lý chung luôn ở phần field `email` cho tiện.
+
 ## Cập nhật logic login và config env
 
 - Cập nhật logic login và config env
+
+- Sửa lại logic của phần logic và fix config env cho project
 
 ## Access token middleware cho logout
 
 - Access token và middleware cho logout
 
+- Access token
+
 ## Refresh token middleware và logout logic
 
 - Refresh token middleware và logout logic
+
+- Refresh token
