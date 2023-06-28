@@ -7,7 +7,7 @@ import { validate } from '~/utils/validation'
 const usersRouter = Router()
 
 // Params đầu tiên sẽ là cái path, params thứ 2 -> 9 là cái handler này đóng vai trò như là một middleware vậy
-usersRouter.post('/login', loginValidator, loginController)
+usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 /**
  * Description. Register a new user
@@ -19,3 +19,6 @@ usersRouter.post('/login', loginValidator, loginController)
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 
 export default usersRouter
+
+// Vì người còn gái vì yêu mà đau đến điên dại
+// Vì yêu mà đau đến điên dại

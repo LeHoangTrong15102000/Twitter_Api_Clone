@@ -5,7 +5,7 @@ import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
 import { TokenType, UserVerifyStatus } from '~/constants/enums'
 import { config } from 'dotenv'
-import { RefreshTokenValidator } from '../middlewares/users.middlewares'
+import { refreshTokenValidator } from '../middlewares/users.middlewares'
 import { USERS_MESSAGES } from '~/constants/messages'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
@@ -72,6 +72,8 @@ class UsersService {
       }
     })
   }
+
+  // Người thân ở đây chúng ta sẽ làm hết mình thôi, không còn đường để mà lùi nữa rồi
 
   private signAccessAndRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     // Dùng promise.all để chạy 2 hàm async await song song với nhau
