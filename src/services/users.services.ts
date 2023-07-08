@@ -237,11 +237,32 @@ class UsersService {
     }
   }
 
+  // Tạo refreshToken, khi mà gọi tới cái route refreshToken này thì sẽ tạo ra một refreshToken mới cho server
+  async refreshToken({
+    user_id,
+    refresh_token,
+    verify
+  }: {
+    user_id: string
+    verify: UserVerifyStatus
+    refresh_token: string
+  }) {
+    // Tạo ra access_token và refresh_token mới
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id, verify }),
+      this.signRefreshToken({ user_id, verify }),
+      databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    ])
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
+  }
+
   // Gửi email xác thực cho người dùng há,
   async verifyEmail(user_id: string) {
     // Tạo giá trị cập nhật
     // Mongodb cập nhật giá trị
-
     // Lấy ra giá trị đầu tiên từ Promise.all([]) => giá trị đầu chứa access_token và refresh_token
     const [token] = await Promise.all([
       this.signAccessAndRefreshToken({ user_id, verify: UserVerifyStatus.Verified }),

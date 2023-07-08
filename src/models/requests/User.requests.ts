@@ -3,6 +3,8 @@ import { param } from 'express-validator'
 import { JwtPayload } from 'jsonwebtoken'
 import { TokenType } from '~/constants/enums'
 
+// Req.body sẽ là những tham số mà bên dưới client sẽ gửi về cho chúng ta
+
 // Định nghĩa những cái interface req body gửi lên
 export interface RegisterReqBody {
   name: string
@@ -17,6 +19,10 @@ export interface LoginReqBody {
   password: string
 }
 export interface LogoutReqBody {
+  refresh_token: string
+}
+
+export interface RefreshTokenReqBody {
   refresh_token: string
 }
 
@@ -40,6 +46,9 @@ export interface UpdateMeReqBody {
   bio?: string
   location?: string
   website?: string
+  username?: string
+  avatar?: string
+  cover_photo?: string
 }
 
 export interface VerifyForgotPasswordReqBody {

@@ -636,6 +636,7 @@ export const unfollowValidator = validate(
   )
 )
 
+// validate changePassword
 export const changePasswordValidator = validate(
   checkSchema({
     old_password: {
