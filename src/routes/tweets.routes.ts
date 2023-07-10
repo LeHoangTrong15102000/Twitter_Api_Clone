@@ -1,3 +1,26 @@
 // Chứa các route của tweet của dự án
-// Viết các router vào trong đây hết nó là như vậy d dó
-// Nếu được như vậy thì cũng hay lắm rồi đó không phải dạng vừa đâu
+
+import { Router } from 'express'
+import { createTweetController } from '~/controllers/tweets.controllers'
+import { createTweetValidator } from '~/middlewares/tweets.middlewares'
+import { accessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
+import { wrapRequestHandler } from '~/utils/handlers'
+
+const tweetsRouter = Router()
+
+/**
+ * Description: Create Tweet
+ * Path: /
+ * Method: POST
+ * Body: TweetRequestBody
+ */
+
+tweetsRouter.post(
+  '/',
+  accessTokenValidator,
+  verifiedUserValidator,
+  createTweetValidator,
+  wrapRequestHandler(createTweetController)
+)
+
+export default tweetsRouter
