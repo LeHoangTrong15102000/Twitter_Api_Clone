@@ -8,10 +8,18 @@ import { initFolder } from './utils/file'
 import mediasRouter from './routes/medias.routes'
 import staticRouter from './routes/static.routes'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
+import tweetsRouter from './routes/tweets.routes'
+import likesRouter from './routes/likes.routes'
+import bookmarksRouter from './routes/bookmarks.routes'
 
 config()
 // Kết nối với database của mongodb
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+  databaseService.indexRefreshTokens()
+  databaseService.indexVideoStatus()
+  databaseService.indexFollowers()
+})
 const app = express()
 app.use(cors())
 const port = process.env.PORT || 4000
@@ -22,6 +30,9 @@ app.use(express.json()) // Nó sẽ biến JSON thành một cái object cho ch�
 // app.use(express.urlencoded({ extended: false }))
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
+app.use('/tweets', tweetsRouter)
+app.use('/likes', likesRouter)
+app.use('/bookmarks', bookmarksRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 

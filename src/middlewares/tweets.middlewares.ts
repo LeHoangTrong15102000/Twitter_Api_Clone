@@ -8,6 +8,9 @@ import { TWEETS_MESSAGES } from '~/constants/messages'
 import { numberEnumToArray } from '~/utils/commons'
 import { validate } from '~/utils/validation'
 import isEmpty from 'lodash/isEmpty'
+import { ErrorWithStatus } from '~/models/Errors'
+import HTTP_STATUS from '~/constants/httpStatus'
+import databaseService from '~/services/database.services'
 
 const tweetTypes = numberEnumToArray(TweetType)
 const tweetAudiences = numberEnumToArray(TweetAudience)
@@ -109,4 +112,32 @@ export const createTweetValidator = validate(
       }
     }
   })
+)
+
+export const tweetIdValidator = validate(
+  checkSchema(
+    {
+      tweet_id: {
+        custom: {
+          options: async (value, { req }) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.BAD_REQUEST,
+                message: TWEETS_MESSAGES.INVALID_TWEET_ID
+              })
+            }
+            const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(value) })
+            if (!tweet) {
+              throw new ErrorWithStatus({
+                status: HTTP_STATUS.NOT_FOUND,
+                message: TWEETS_MESSAGES.TWEET_NOT_FOUND
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params', 'body']
+  )
 )
