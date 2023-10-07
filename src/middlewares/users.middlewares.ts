@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-// Chứa middlewares của users của chúng ta
 import { Request, Response, NextFunction } from 'express' // Đây là những cái interface
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
@@ -22,6 +21,7 @@ import { REGEX_USERNAME } from '~/constants/regex'
 config()
 
 // Tạo ra những cái schema như là password, confirm_password, name, date_of_birth, imageSchema, forgot_password
+// middleware check validation rồi thì schema không cần check
 
 const nameSchema: ParamSchema = {
   notEmpty: {
@@ -444,6 +444,7 @@ export const refreshTokenValidator = validate(
   )
 )
 
+// Check email verify token gửi lên server có
 export const emailVerifyTokenValidator = validate(
   checkSchema(
     {
@@ -462,6 +463,25 @@ export const emailVerifyTokenValidator = validate(
                 token: value,
                 secretOrPublicKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string
               })
+              const { user_id } = decoded_email_verify_token // kiểu string
+              const user = await databaseService.users.findOne({
+                _id: new ObjectId(user_id) // do trong mongodb _id kiểu là ObjectId
+              })
+
+              if (user === null) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.USER_NOT_FOUND,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+
+              if (user.email_verify_token !== value) {
+                throw new ErrorWithStatus({
+                  message: USERS_MESSAGES.INVALID_EMAIL_VERIFY_TOKEN,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+
               ;(req as Request).decoded_email_verify_token = decoded_email_verify_token
             } catch (error) {
               throw new ErrorWithStatus({
@@ -666,3 +686,13 @@ export const changePasswordValidator = validate(
     confirm_new_password: confirmPasswordSchema
   })
 )
+
+//
+export const isUserLoggedInValidator = (middleware: (req: Request, res: Response, next: NextFunction) => void) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers.authorization) {
+      return middleware(req, res, next)
+    }
+    next()
+  }
+}

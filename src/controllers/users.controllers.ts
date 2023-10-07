@@ -159,8 +159,27 @@ export const verifyForgotPasswordController = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { user_id, verify } = req.decoded_forgot_password_token as TokenPayload
+  const user = await databaseService.users.findOne({
+    _id: new ObjectId(user_id)
+  })
+
+  if (!user) {
+    return res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: USERS_MESSAGES.USER_NOT_FOUND
+    })
+  }
+
+  if (user.forgot_password_token === '') {
+    return res.json({
+      message: USERS_MESSAGES.FORGOT_PASSWORD_ALREADY_VERIFIED_BEFORE
+    })
+  }
+  // Khi mà forgot_password_token !== '' thì tiến hành xác thực
+  const result = await usersService.forgotPassword({ user_id, verify })
   return res.json({
-    message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS
+    message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS,
+    result
   })
 }
 
@@ -172,6 +191,7 @@ export const resetPasswordController = async (
 ) => {
   const { user_id } = req.decoded_forgot_password_token as TokenPayload
   const { password } = req.body // lấy ra password từ người dùng gửi lên
+  // đưa lên user_id và password cũ
   const result = await usersService.resetPassword(user_id, password)
   return res.json(result)
 }
@@ -248,3 +268,5 @@ export const changePasswordController = async (
 
   return res.json(result)
 }
+
+// Đừng nên mơ mộng nữa hãy thực tế lên một chút

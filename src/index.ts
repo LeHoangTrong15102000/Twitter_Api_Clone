@@ -11,6 +11,7 @@ import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import tweetsRouter from './routes/tweets.routes'
 import likesRouter from './routes/likes.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
+import searchRouter from './routes/search.routes'
 
 config()
 // Kết nối với database của mongodb
@@ -21,18 +22,28 @@ databaseService.connect().then(() => {
   databaseService.indexFollowers()
 })
 const app = express()
-app.use(cors())
+app.use(cors()) // setup vậy thì mỗi đường dẫn browser đều có thể truy cập được vào cái api này
+// Còn nếu chỉ muốn 1 đường dẫn browser của cty truy cập vào được thì set options cho nó
+/**
+ * ví dụ như sau:
+ * const corOptions = {
+ *  origin: 'url...',
+ *  credentials: true,
+ *  optionSuccessStatus: 200
+ * }
+ */
 const port = process.env.PORT || 4000
 
 // Tạo folder upload
 initFolder()
 app.use(express.json()) // Nó sẽ biến JSON thành một cái object cho chúng ta
-// app.use(express.urlencoded({ extended: false }))
+// app.use(express.urlencoded({ extended: false })) // Dùng để mã hóa các đường dẫn
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/tweets', tweetsRouter)
-app.use('/likes', likesRouter)
 app.use('/bookmarks', bookmarksRouter)
+app.use('/likes', likesRouter)
+app.use('/search', searchRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 

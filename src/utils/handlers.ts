@@ -3,7 +3,7 @@ import { Request, Response, NextFunction, RequestHandler } from 'express'
 // type Func = (req: Request, reS: Response, next: NextFunction) => Promise<void>
 
 // Nhận vào async function hoặc là một function bình thường và trả về cho chúng ta một Request Handler
-export const wrapRequestHandler = <P>(func: RequestHandler<P>) => {
+export const wrapRequestHandler = <P>(func: RequestHandler<P, any, any, any>) => {
   // Trong dây return về một Request Handler, trong reqHandler sẽ gọi đến func được truyền vào
   return async (req: Request<P>, res: Response, next: NextFunction) => {
     // Promise.resolve(func(req, res, next)).catch(next) -> Chỉ dùng cho mỗi async function

@@ -29,12 +29,14 @@ export const USERS_MESSAGES = {
   EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
   USER_NOT_FOUND: 'User not found',
   EMAIL_ALREADY_VERIFIED_BEFORE: 'Email already verified before',
+  FORGOT_PASSWORD_ALREADY_VERIFIED_BEFORE: 'Forgot password already verified before',
   EMAIL_VERIFY_SUCCESS: 'Email verify success',
   RESEND_VERIFY_EMAIL_SUCCESS: 'Resend verify email success',
   CHECK_EMAIL_TO_RESET_PASSWORD: 'Check email to reset password',
   FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token is required',
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password success',
   INVALID_FORGOT_PASSWORD_TOKEN: 'Invalid forgot password token',
+  INVALID_EMAIL_VERIFY_TOKEN: 'Invalid email verify token',
   RESET_PASSWORD_SUCCESS: 'Reset password success',
   GET_ME_SUCCESS: 'Get my profile success',
   USER_NOT_VERIFIED: 'User not verified',
@@ -76,7 +78,8 @@ export const TWEETS_MESSAGES = {
   MENTIONS_MUST_BE_AN_ARRAY_OF_USER_ID: 'Mentions must be an array of user id',
   MEDIAS_MUST_BE_AN_ARRAY_OF_MEDIA_OBJECT: 'Medias must be an array of media object',
   INVALID_TWEET_ID: 'Invalid tweet id',
-  TWEET_NOT_FOUND: 'Tweet not found'
+  TWEET_NOT_FOUND: 'Tweet not found',
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public'
 } as const
 
 export const BOOKMARK_MESSAGES = {

@@ -86,6 +86,16 @@ class DatabaseService {
 
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USERS_COLLECTION as string)
+    // thêm method users vào
+    /**
+     *
+     * const users = this.db.collection(envConfigs.dbUsersCollection)
+     * users.signIn = async (email: string, password: string) => {
+     * console.log('email', email)
+     * }
+     *
+     * return users
+     */
   }
 
   // Đây sẽ là những Collection của database
